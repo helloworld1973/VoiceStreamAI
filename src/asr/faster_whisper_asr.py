@@ -126,13 +126,13 @@ class FasterWhisperASR(ASRInterface):
         flattened_words = [word for segment in segments for word in segment.words]
 
         to_return = {
-        "language": info.language,
-        "language_probability": info.language_probability,
-        "text": ' '.join([s.text.strip() for s in segments]),
-        "words":
-            [
-                {"word": w.word, "start": w.start, "end": w.end, "probability":w.probability} for w in flattened_words
-            ]
+            "language": info.language,
+            "language_probability": info.language_probability,
+            "text": ' '.join([s.text.strip() for s in segments]),
+            "words":
+                [
+                    {"word": w.word, "start": w.start, "end": w.end, "probability": w.probability} for w in
+                    flattened_words
+                ]
         }
         return to_return
-

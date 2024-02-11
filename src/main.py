@@ -2,14 +2,15 @@ import argparse
 import asyncio
 import json
 
-from .server import Server
+from server import Server
 from src.asr.asr_factory import ASRFactory
+from src.ltm.transformer_MBart import TransformersMBartLTM
 from src.vad.vad_factory import VADFactory
 
 def parse_args():
     parser = argparse.ArgumentParser(description="VoiceStreamAI Server: Real-time audio transcription using self-hosted Whisper and WebSocket")
     parser.add_argument("--vad-type", type=str, default="pyannote", help="Type of VAD pipeline to use (e.g., 'pyannote')")
-    parser.add_argument("--vad-args", type=str, default='{"auth_token": "huggingface_token"}', help="JSON string of additional arguments for VAD pipeline")
+    parser.add_argument("--vad-args", type=str, default='{"auth_token": "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"}', help="JSON string of additional arguments for VAD pipeline")
     parser.add_argument("--asr-type", type=str, default="faster_whisper", help="Type of ASR pipeline to use (e.g., 'whisper')")
     parser.add_argument("--asr-args", type=str, default='{"model_size": "large-v3"}', help="JSON string of additional arguments for ASR pipeline")
     parser.add_argument("--host", type=str, default="127.0.0.1", help="Host for the WebSocket server")
@@ -28,8 +29,9 @@ def main():
 
     vad_pipeline = VADFactory.create_vad_pipeline(args.vad_type, **vad_args)
     asr_pipeline = ASRFactory.create_asr_pipeline(args.asr_type, **asr_args)
+    ltm_pipeline = TransformersMBartLTM()
 
-    server = Server(vad_pipeline, asr_pipeline, host=args.host, port=args.port, sampling_rate=16000, samples_width=2)
+    server = Server(vad_pipeline, asr_pipeline, ltm_pipeline, host=args.host, port=args.port, sampling_rate=16000, samples_width=2)
 
     asyncio.get_event_loop().run_until_complete(server.start())
     asyncio.get_event_loop().run_forever()
