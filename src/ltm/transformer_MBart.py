@@ -3,6 +3,7 @@ from transformers import MBartForConditionalGeneration, MBart50TokenizerFast
 
 class TransformersMBartLTM():
     def __init__(self):
+        # load the model and embedding encoder
         self.model = MBartForConditionalGeneration.from_pretrained("facebook/mbart-large-50-many-to-many-mmt")
         self.tokenizer = MBart50TokenizerFast.from_pretrained("facebook/mbart-large-50-many-to-many-mmt")
 
