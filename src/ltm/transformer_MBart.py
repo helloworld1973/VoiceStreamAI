@@ -1,5 +1,7 @@
 from transformers import MBartForConditionalGeneration, MBart50TokenizerFast
 
+from src.ltm.openAI import openAI_QA
+
 
 class TransformersMBartLTM():
     def __init__(self):
@@ -15,8 +17,12 @@ class TransformersMBartLTM():
         elif lang == "en":
             src_lang = "en_XX"
             target_lang = "zh_CN"
+        elif lang == "mi":
+            request_openAI = openAI_QA()
+            translated_text = request_openAI.translate(complete_txt)
+            return translated_text
         else:
-            raise ValueError("Unsupported language for translation.")
+           return
 
         # Set the source language for the tokenizer
         self.tokenizer.src_lang = src_lang

@@ -91,7 +91,7 @@ class SilenceAtEndOfChunk(BufferingStrategyInterface):
             return
 
         last_segment_should_end_before = ((len(self.client.scratch_buffer) / (
-                    self.client.sampling_rate * self.client.samples_width)) - self.chunk_offset_seconds)
+                self.client.sampling_rate * self.client.samples_width)) - self.chunk_offset_seconds)
         if vad_results[-1]['end'] < last_segment_should_end_before:
             transcription = await asr_pipeline.transcribe(self.client)
             if transcription['text'] != '':
@@ -103,7 +103,8 @@ class SilenceAtEndOfChunk(BufferingStrategyInterface):
                 lang = transcription['language']
                 translated_text = await ltm_pipeline.translate(complete_txt, lang)
                 # print(translated_text)
-                transcription['text'] = translated_text
+                if translated_text != None:
+                    transcription['text'] = translated_text
                 json_transcription = json.dumps(transcription)
                 await websocket.send(json_transcription)
 
