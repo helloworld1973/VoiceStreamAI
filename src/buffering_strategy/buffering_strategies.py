@@ -97,14 +97,15 @@ class SilenceAtEndOfChunk(BufferingStrategyInterface):
             if transcription['text'] != '':
                 end = time.time()
                 transcription['processing_time'] = end - start
-                json_transcription = json.dumps(transcription)
-                await websocket.send(json_transcription)
 
                 # model translation
                 complete_txt = transcription['text']
                 lang = transcription['language']
                 translated_text = await ltm_pipeline.translate(complete_txt, lang)
-                print(translated_text)
+                # print(translated_text)
+                transcription['text'] = translated_text
+                json_transcription = json.dumps(transcription)
+                await websocket.send(json_transcription)
 
             self.client.scratch_buffer.clear()
             self.client.increment_file_counter()

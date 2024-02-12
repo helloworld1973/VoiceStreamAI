@@ -68,6 +68,11 @@ function updateTranscription(transcript_data) {
             transcriptionDiv.appendChild(span);
         });
 
+        const span = document.createElement('span');
+        span.textContent = transcript_data['text'] + ' ';
+        span.style.color = 'black';
+        transcriptionDiv.appendChild(span);
+
         // Add a new line at the end
         transcriptionDiv.appendChild(document.createElement('br'));
     } else {
